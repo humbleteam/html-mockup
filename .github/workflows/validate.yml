@@ -1,0 +1,60 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md and README
+        run: |
+          set -e
+
+          if [ ! -f "SKILL.md" ]; then
+            echo "SKILL.md is missing"
+            exit 1
+          fi
+
+          name_line=$(grep -m1 '^name:' SKILL.md || true)
+          if [ -z "$name_line" ]; then
+            echo "SKILL.md frontmatter is missing a non-empty name: field"
+            exit 1
+          fi
+          name_value=$(echo "$name_line" | sed 's/^name:[[:space:]]*//' | tr -d '"' | tr -d "'" | xargs)
+          if [ -z "$name_value" ]; then
+            echo "SKILL.md frontmatter has an empty name: field"
+            exit 1
+          fi
+
+          description_line=$(grep -m1 '^description:' SKILL.md || true)
+          if [ -z "$description_line" ]; then
+            echo "SKILL.md frontmatter is missing a non-empty description: field"
+            exit 1
+          fi
+          description_value=$(echo "$description_line" | sed 's/^description:[[:space:]]*//' | xargs)
+          if [ -z "$description_value" ]; then
+            echo "SKILL.md frontmatter has an empty description: field"
+            exit 1
+          fi
+
+          repo_dir_name=$(basename "$(pwd)")
+          if [ "$name_value" != "$repo_dir_name" ]; then
+            echo "SKILL.md name: '$name_value' does not match repo directory name '$repo_dir_name'"
+            exit 1
+          fi
+
+          if [ ! -f "README.md" ]; then
+            echo "README.md is missing"
+            exit 1
+          fi
+
+          if ! grep -q "SKILL.md" README.md; then
+            echo "README.md does not link to SKILL.md"
+            exit 1
+          fi
+
+          echo "All checks passed."
