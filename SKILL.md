@@ -23,6 +23,7 @@ Study the reference image carefully. Before writing `<!doctype html>` or any CSS
   TEMPERATURE: warm|cool|neutral [warm = amber/olive/tan/gold tones; cool = blue/teal/slate]
   PHOTOS: [count] regions - [list each: "hero portrait 390x500", "food circle 60x60 x3", etc.]
   ITEMS PER SECTION: [exact counts - "3 list rows", "1 transaction", "5 nav tabs"]
+  CUT OFF AT EDGE: [none | each item the frame clips - "list row 4, top half visible", "card 3, left third visible"]
   ACTIVE STATES: [which element is selected + how - "Home tab: filled icon + dot indicator"]
   BUTTON FILLS: [per button: filled-dark|filled-color|outlined|ghost - "Save: filled #1A1A1A, Delete: outlined red"]
 -->
@@ -65,6 +66,14 @@ Render the exact visual state shown in the reference for every interactive eleme
 
 Render exactly the number of items the census counted. Three rows in the reference means three rows in the output, never four "to look fuller" and never one collapsed down to save space. If the reference has visible empty space below the content, that space is intentional - preserve it rather than stretching items to fill the viewport.
 
+An item the frame cuts in half is neither empty space nor a fourth item. It is the reference telling you the list scrolls, and it is the one place the count lock has to be read carefully: count fully visible items and clipped items separately in the census, then render both.
+
+- Render the clipped item clipped, cut where the reference cuts it - put the list in a container that overflows the frame rather than trimming the markup. The cut lands inside the item, not in the gap between two items.
+- Never complete a clipped item into a full row. That adds an item the reference does not show and turns a scroll cue into a longer list.
+- Never drop it either. Three rows and a half rendered as three rows leaves dead space underneath and reads as a short screen instead of a scrolling one - the same failure as padding, pointing the other way.
+- A clipped item follows every other rule unchanged: same placeholder photo sources, same palette, same states as its full siblings.
+- Empty space stays empty only when the reference shows nothing at all below the last item.
+
 ## Icons
 
 - Inline SVG paths only, from Lucide, Heroicons, or Phosphor. No external icon-font CDN, no emoji.
@@ -99,10 +108,15 @@ Deliver one self-contained `.html` file: a full `<!doctype html>` document with 
 - Multiple distinct screens in one image: ask which one to mock up rather than guessing or merging them.
 - Reference font is unclear or a custom font you can't identify: use the nearest system font stack (e.g. `-apple-system, "Segoe UI", Roboto, sans-serif`) and note the substitution in a code comment near the `font-family` declaration.
 - Reference is blurry or too small to extract exact hex values: say so, extract your best estimate, and mark the uncertain palette entries in the census rather than presenting a guess as measured fact.
+- Frame is an arbitrary crop rather than a device screen: a device screenshot's bottom edge is the viewport, so an item cut there means the content scrolls. A crop's edge is wherever someone dragged the selection box and means nothing about scrolling. When you cannot tell which you are looking at, treat it as a device viewport, write the assumption into the census next to the cut item, and say so on delivery.
+- Content clipped horizontally (a carousel card peeking off the right edge, a wide table): same rule as a vertical cut - render the peek at the width the reference shows, never rounded up to a full card or dropped.
+- Reference shows a scrollbar or scroll indicator but no partially visible item: record it in the census as a scroll cue, render the indicator, and do not invent extra rows to justify it.
 
 ## Before you deliver: self-check
 
 Re-read your own census against your own render. For each line in the census, find the matching value in the HTML. If any census line has no matching render output - a color, a count, a state - fix the render before sending it. A mismatch between the census and the render is the single failure mode this skill exists to prevent.
+
+Check the CUT OFF AT EDGE line at the census dimensions specifically: every item listed there is still clipped in the render, the cut falls inside the item rather than between two of them, and none has quietly grown into a whole one.
 
 ## Reference material
 

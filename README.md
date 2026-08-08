@@ -34,6 +34,7 @@ Paste a screenshot, ask for a coded version, and this Claude Code skill writes a
 - Locks color to hex values extracted from the reference, declared once as CSS custom properties on `:root`, with no raw hex anywhere else in the stylesheet.
 - Reproduces component states exactly - filled vs outlined buttons, two-signal active tabs, elevated floating action buttons, correctly sized notification dots.
 - Renders the exact number of items counted in the reference, never padding a section to fill the viewport.
+- Keeps an item the frame cuts in half cut in half, because that half row is the reference saying the list scrolls - completing it adds content that isn't there, dropping it turns a scrolling screen into a short one with dead space.
 
 ## Quick start
 
@@ -69,6 +70,7 @@ The first lines inside the delivered `.html` file always look like this, before 
   TEMPERATURE: warm
   PHOTOS: 4 regions - hero portrait 390x480, avatar circle 48x48 x3
   ITEMS PER SECTION: 3 list rows, 5 nav tabs
+  CUT OFF AT EDGE: list row 4, top half visible at the bottom of the frame
   ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
   BUTTON FILLS: Save: filled #1A1A1A, Cancel: outlined #7A6A52
 -->
@@ -89,7 +91,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 </head>
 <body>
   <img class="avatar" src="https://i.pravatar.cc/96?img=12" alt="User avatar">
-  <!-- exactly 3 list rows, matching ITEMS PER SECTION -->
+  <!-- exactly 3 full list rows, plus row 4 clipped by the frame - matching the census -->
 </body>
 </html>
 ```
@@ -103,7 +105,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 - **Photos are photos.** Any photographic region gets a real `<img>` from a placeholder photo service, tinted toward the reference's warmth with a CSS filter. Gradients simulating photographs are disallowed.
 - **Color is extracted, not approximated.** Hex values come from close observation, declared once as named CSS custom properties on `:root`, used nowhere else as raw hex - which also keeps warm/cool temperature consistent across every neutral.
 - **States get rendered as-is.** Filled buttons stay filled, outlined stay outlined, and an active tab needs at least two simultaneous visual signals to read as selected - a color swap alone isn't enough.
-- **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it.
+- **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it. A row the frame cuts in half stays cut in half - that half row is a scroll cue, not a rounding error.
 - **Icons are inline SVG with a matching metaphor**, never emoji or a generic stand-in for the shape actually shown in the reference.
 - **Defaults fill the gaps.** Mobile 390x844, tablet 768x1024, desktop 1440x900 when the device isn't specified; nearest system font stack, flagged in a comment, when the typeface can't be identified.
 

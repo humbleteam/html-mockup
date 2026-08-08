@@ -8,6 +8,7 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] **TEMPERATURE** - the reference is classified warm, cool, or neutral, and every neutral color in the render matches that temperature.
 - [ ] **PHOTOS** - every photographic region is counted with its approximate dimensions and content ("hero portrait 390x500", "food circle 60x60 x3").
 - [ ] **ITEMS PER SECTION** - every repeating group (list rows, cards, tabs, buttons) has an exact count, not an approximation.
+- [ ] **CUT OFF AT EDGE** - every item the frame clips is listed with how much of it shows ("list row 4, top half visible"), counted separately from the fully visible ones, or the line reads `none`.
 - [ ] **ACTIVE STATES** - the selected/active element in each group is named, with the specific visual signal that marks it as active.
 - [ ] **BUTTON FILLS** - every button is classified filled-dark, filled-color, outlined, or ghost, with its exact fill or border color.
 
@@ -21,6 +22,7 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] Photo regions use real `<img>` tags (picsum.photos, i.pravatar.cc), never a gradient.
 - [ ] No raw hex values exist outside the `:root` custom-property block.
 - [ ] Item counts in the render match item counts in the census exactly - no added "filler" items, nothing dropped to save space.
+- [ ] Every clipped item is still clipped in the render, cut inside the item rather than in the gap between two - never completed into a full row, never dropped, never replaced by empty space.
 - [ ] Icons are inline SVG with a metaphor that matches the label, never emoji.
 - [ ] Any UI gradient (not a photo) has at least 3 color stops.
 
