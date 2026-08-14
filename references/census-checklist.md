@@ -23,6 +23,7 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] No raw hex values exist outside the `:root` custom-property block.
 - [ ] Item counts in the render match item counts in the census exactly - no added "filler" items, nothing dropped to save space.
 - [ ] Every clipped item is still clipped in the render, cut inside the item rather than in the gap between two - never completed into a full row, never dropped, never replaced by empty space.
+- [ ] When `CUT OFF AT EDGE` is not `none`, the mockup sits in a frame container fixed at the census width and height with `overflow: hidden`. Check this first: a document free to grow renders every clipped item in full while every count still matches.
 - [ ] Icons are inline SVG with a metaphor that matches the label, never emoji.
 - [ ] Any UI gradient (not a photo) has at least 3 color stops.
 

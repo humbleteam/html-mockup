@@ -68,7 +68,7 @@ Render exactly the number of items the census counted. Three rows in the referen
 
 An item the frame cuts in half is neither empty space nor a fourth item. It is the reference telling you the list scrolls, and it is the one place the count lock has to be read carefully: count fully visible items and clipped items separately in the census, then render both.
 
-- Render the clipped item clipped, cut where the reference cuts it - put the list in a container that overflows the frame rather than trimming the markup. The cut lands inside the item, not in the gap between two items.
+- Render the clipped item clipped, cut where the reference cuts it - put the list in a container that overflows the frame rather than trimming the markup. The cut lands inside the item, not in the gap between two items. The frame is a real element with a fixed height, and a census with anything on the CUT OFF AT EDGE line is what calls for one: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
 - Never complete a clipped item into a full row. That adds an item the reference does not show and turns a scroll cue into a longer list.
 - Never drop it either. Three rows and a half rendered as three rows leaves dead space underneath and reads as a short screen instead of a scrolling one - the same failure as padding, pointing the other way.
 - A clipped item follows every other rule unchanged: same placeholder photo sources, same palette, same states as its full siblings.
@@ -88,19 +88,30 @@ Sample at least 3 stops from the reference gradient. A 2-stop `linear-gradient(b
 
 Render the brand's first letter, white or dark depending on contrast, centered in a rounded square filled with the brand color (8px corner radius, 36x36px default size).
 
-## Default dimensions
+## Default dimensions and the frame
 
 Use these unless the request or reference specifies otherwise:
 
-- Mobile: 390 x 844px (content height may grow, never shrinks below 844).
+- Mobile: 390 x 844px.
 - Tablet: 768 x 1024px.
 - Desktop: 1440 x 900px.
 
 Mobile is the default when the target device is unstated.
 
+Whether that height is a floor or a fixed edge is decided by the census, not by the device:
+
+- **`CUT OFF AT EDGE: none`** - the height is a floor. Content may grow past it and never shrinks below it. A full-page capture of a long screen has no viewport edge in it, and forcing it back to 844px would invent a cut the reference does not show.
+- **Any entry on that line** - the height is fixed. The reference's bottom edge is the viewport, which is what a clipped item is evidence of, and a document free to grow renders that item in full: the one outcome Step 5 forbids.
+
+A fixed height needs an element to belong to. "Overflows the frame" is not a property of the document, so build the frame: one container at the census width and height, `overflow: hidden`, with the content in normal flow inside it. The clipped item then cuts where the container ends, which is where the reference cuts it. Center the frame on the page so the size of the browser window stops changing what the mockup looks like.
+
+Use `overflow-y: auto` in place of `hidden` only when the reference shows a scrollbar, or when the user asks for a scrollable prototype rather than a still image. A scrollbar the reference does not show is a visual element the render invented.
+
 ## Output format
 
 Deliver one self-contained `.html` file: a full `<!doctype html>` document with an inline `<style>` block (no external stylesheet, no build step, no framework), the census comment as the first lines, and CSS custom properties on `:root`. The file must open correctly in a browser with no other files present.
+
+When the census lists anything under CUT OFF AT EDGE, the markup carries the frame container described above, and the file renders the same at any window size.
 
 ## Edge cases
 
@@ -117,6 +128,8 @@ Deliver one self-contained `.html` file: a full `<!doctype html>` document with 
 Re-read your own census against your own render. For each line in the census, find the matching value in the HTML. If any census line has no matching render output - a color, a count, a state - fix the render before sending it. A mismatch between the census and the render is the single failure mode this skill exists to prevent.
 
 Check the CUT OFF AT EDGE line at the census dimensions specifically: every item listed there is still clipped in the render, the cut falls inside the item rather than between two of them, and none has quietly grown into a whole one.
+
+If that line is not `none`, confirm the frame exists before checking anything inside it: a container fixed at the census width and height, with `overflow` hidden rather than visible. A mockup that scrolls the page instead of the frame passes every count and still shows the clipped item in full, because the document grew to fit it.
 
 ## Reference material
 

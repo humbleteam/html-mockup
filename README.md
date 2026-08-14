@@ -35,6 +35,7 @@ Paste a screenshot, ask for a coded version, and this Claude Code skill writes a
 - Reproduces component states exactly - filled vs outlined buttons, two-signal active tabs, elevated floating action buttons, correctly sized notification dots.
 - Renders the exact number of items counted in the reference, never padding a section to fill the viewport.
 - Keeps an item the frame cuts in half cut in half, because that half row is the reference saying the list scrolls - completing it adds content that isn't there, dropping it turns a scrolling screen into a short one with dead space.
+- Builds the frame that does the clipping: a container fixed at the census dimensions, so the mockup looks the same in any browser window instead of stretching until nothing is cut off any more.
 
 ## Quick start
 
@@ -85,13 +86,20 @@ The first lines inside the delivered `.html` file always look like this, before 
     --accent: #C9762F;
     --secondary: #7A6A52;
   }
-  body { background: var(--bg-primary); color: var(--text-primary); }
+  body { background: #E8E4DA; display: flex; justify-content: center; }
+  /* CUT OFF AT EDGE is not none, so the height is fixed and the frame does the clipping */
+  .frame {
+    width: 390px; height: 844px; overflow: hidden;
+    background: var(--bg-primary); color: var(--text-primary);
+  }
   .avatar { border-radius: 50%; width: 48px; height: 48px; object-fit: cover; }
 </style>
 </head>
 <body>
-  <img class="avatar" src="https://i.pravatar.cc/96?img=12" alt="User avatar">
-  <!-- exactly 3 full list rows, plus row 4 clipped by the frame - matching the census -->
+  <div class="frame">
+    <img class="avatar" src="https://i.pravatar.cc/96?img=12" alt="User avatar">
+    <!-- exactly 3 full list rows, then row 4 cut mid-row by the frame - matching the census -->
+  </div>
 </body>
 </html>
 ```
@@ -108,6 +116,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 - **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it. A row the frame cuts in half stays cut in half - that half row is a scroll cue, not a rounding error.
 - **Icons are inline SVG with a matching metaphor**, never emoji or a generic stand-in for the shape actually shown in the reference.
 - **Defaults fill the gaps.** Mobile 390x844, tablet 768x1024, desktop 1440x900 when the device isn't specified; nearest system font stack, flagged in a comment, when the typeface can't be identified.
+- **The census decides what the height means.** With nothing clipped, the default height is a floor and long content grows past it. With a clipped item, it's a fixed edge, and the mockup gets a real frame element that does the cutting - otherwise the page simply grows and renders that half row in full.
 
 ## How is this different from just asking the model?
 
