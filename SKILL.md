@@ -51,6 +51,13 @@ Wherever the reference shows a photograph (portrait, food, product, room, landsc
 2. Declare every extracted color as a CSS custom property on `:root`, named by role: `--bg-primary`, `--text-primary`, `--accent`, `--secondary`, etc. Role names, not value names (never `--gray-1`).
 3. Use only those custom properties everywhere else in the CSS. No raw hex values outside the `:root` block. If you catch yourself typing a hex code inside a rule, stop and add it to `:root` first.
 4. Keep temperature consistent: if the reference leans warm (amber, olive, tan, gold), every neutral in your palette should lean warm too. If it leans cool (teal, slate, blue), keep neutrals cool. A mismatched neutral is visible even at thumbnail size.
+5. A gradient is one role, not one role per stop. Store the whole expression under a single custom property - `--header-gradient: linear-gradient(180deg, #1A6B5E 0%, #14584D 40%, #0D4A3F 70%, #082F28 100%);` - and write its stops on the census PALETTE line as that role's set, not as four more roles. Rule 3 has no exception for gradient stops: written inline they are raw hex in a rule, and split into `--gradient-1` through `--gradient-4` they are value names, which rule 2 forbids.
+6. A color the render needs and the reference does not contain is still a `:root` token, and it stays off the census PALETTE line. The skill creates exactly one: the page ground behind a fixed frame, which exists because the mockup is centered in a browser window that the reference never had. Give it a role name, mark it, and leave the census alone - that line reports what the reference shows, and adding a color the reference does not contain would make the census wrong in the one direction it is never allowed to be.
+
+```css
+  /* Not from the reference: the surround the frame sits on */
+  --page-ground: #E8E4DA;
+```
 
 ## Step 4: Component state fidelity
 
@@ -82,7 +89,11 @@ An item the frame cuts in half is neither empty space nor a fourth item. It is t
 
 ## UI gradients (backgrounds, headers - not photos)
 
-Sample at least 3 stops from the reference gradient. A 2-stop `linear-gradient(brand, black)` hits black far faster than most real gradients do and reads as flat. Example: `linear-gradient(180deg, #1A6B5E 0%, #14584D 40%, #0D4A3F 70%, #082F28 100%)`. Match the gradient's temperature to the rest of the palette.
+Sample at least 3 stops from the reference gradient. A 2-stop `linear-gradient(brand, black)` hits black far faster than most real gradients do and reads as flat. Match the gradient's temperature to the rest of the palette, and declare it the way Step 3 rule 5 requires - the whole expression under one role name in `:root`, used by `var()` wherever it renders:
+
+```css
+  --header-gradient: linear-gradient(180deg, #1A6B5E 0%, #14584D 40%, #0D4A3F 70%, #082F28 100%);
+```
 
 ## Brand logos without an available SVG
 
@@ -126,6 +137,8 @@ When the census lists anything under CUT OFF AT EDGE, the markup carries the fra
 ## Before you deliver: self-check
 
 Re-read your own census against your own render. For each line in the census, find the matching value in the HTML. If any census line has no matching render output - a color, a count, a state - fix the render before sending it. A mismatch between the census and the render is the single failure mode this skill exists to prevent.
+
+Then walk color the other way, because the pass above cannot see this one. Search the file for `#` and for `rgb`, and account for every literal you find: it is inside the `:root` block, and it is either a color the census PALETTE line lists, a stop inside a gradient token whose role that line names, or a token carrying the not-from-the-reference comment from Step 3 rule 6. A hex that matches no census line still satisfies every census line, so census-to-render alone will pass a file that has quietly invented a color or hard-coded one in a rule.
 
 Check the CUT OFF AT EDGE line at the census dimensions specifically: every item listed there is still clipped in the render, the cut falls inside the item rather than between two of them, and none has quietly grown into a whole one.
 

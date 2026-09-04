@@ -85,8 +85,10 @@ The first lines inside the delivered `.html` file always look like this, before 
     --text-primary: #1A1A1A;
     --accent: #C9762F;
     --secondary: #7A6A52;
+    /* Not from the reference: the surround the frame sits on */
+    --page-ground: #E8E4DA;
   }
-  body { background: #E8E4DA; display: flex; justify-content: center; }
+  body { background: var(--page-ground); display: flex; justify-content: center; }
   /* CUT OFF AT EDGE is not none, so the height is fixed and the frame does the clipping */
   .frame {
     width: 390px; height: 844px; overflow: hidden;
@@ -111,7 +113,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 - **Census before code.** The reference gets studied and counted first - palette, temperature, photo regions, item counts, active states, button fills - as a comment block that is the literal first thing in the output file.
 - **The census is the contract.** Every field written in it must have a matching value in the render. A mismatch is a bug in the render, not a detail to shrug off.
 - **Photos are photos.** Any photographic region gets a real `<img>` from a placeholder photo service, tinted toward the reference's warmth with a CSS filter. Gradients simulating photographs are disallowed.
-- **Color is extracted, not approximated.** Hex values come from close observation, declared once as named CSS custom properties on `:root`, used nowhere else as raw hex - which also keeps warm/cool temperature consistent across every neutral.
+- **Color is extracted, not approximated.** Hex values come from close observation, declared once as named CSS custom properties on `:root`, used nowhere else as raw hex - gradients included, stored whole under one role name rather than split into a token per stop. The delivery check runs in both directions: every census color appears in the render, and every literal color in the render traces back to a census line or to a token marked as not from the reference.
 - **States get rendered as-is.** Filled buttons stay filled, outlined stay outlined, and an active tab needs at least two simultaneous visual signals to read as selected - a color swap alone isn't enough.
 - **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it. A row the frame cuts in half stays cut in half - that half row is a scroll cue, not a rounding error.
 - **Icons are inline SVG with a matching metaphor**, never emoji or a generic stand-in for the shape actually shown in the reference.
@@ -141,6 +143,9 @@ It works best with one. Without an image, the skill falls back to a described la
 
 **What image formats work as a reference?**
 Any screenshot Claude can view in the conversation - PNG, JPG, or a pasted image - works. A live URL works too if the agent can render or fetch it.
+
+**Where do colors the reference does not contain go?**
+There is normally one: the page ground behind the frame, which exists only because the mockup is centered in a browser window the reference never had. It is declared on `:root` like every other color and carries a comment saying it is not from the reference, and it stays off the census PALETTE line, since that line reports what the reference shows. The delivery check looks for exactly this - any literal color that traces to neither the census nor a marked token is one the render invented.
 
 **What does the output actually contain?**
 One self-contained `.html` file: full document structure, an inline `<style>` block with CSS custom properties, no external stylesheet, framework, or build step. It opens directly in a browser.

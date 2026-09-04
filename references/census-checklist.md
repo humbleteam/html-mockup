@@ -20,13 +20,16 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] Floating action buttons have visible elevation (`box-shadow`), correct size (56-64px), and correct overlap with whatever they sit above.
 - [ ] Notification dots are sized 8-10px, colored to match the reference, and have a ring in the surrounding background color.
 - [ ] Photo regions use real `<img>` tags (picsum.photos, i.pravatar.cc), never a gradient.
-- [ ] No raw hex values exist outside the `:root` custom-property block.
+- [ ] No raw hex values exist outside the `:root` custom-property block - gradient stops included, which means each UI gradient is one role-named token holding the whole expression, never one token per stop and never written inline.
 - [ ] Item counts in the render match item counts in the census exactly - no added "filler" items, nothing dropped to save space.
 - [ ] Every clipped item is still clipped in the render, cut inside the item rather than in the gap between two - never completed into a full row, never dropped, never replaced by empty space.
 - [ ] When `CUT OFF AT EDGE` is not `none`, the mockup sits in a frame container fixed at the census width and height with `overflow: hidden`. Check this first: a document free to grow renders every clipped item in full while every count still matches.
 - [ ] Icons are inline SVG with a metaphor that matches the label, never emoji.
-- [ ] Any UI gradient (not a photo) has at least 3 color stops.
+- [ ] Any UI gradient (not a photo) has at least 3 color stops, and the census PALETTE line carries those stops under the gradient's role rather than as separate roles.
+- [ ] Every literal color in the file traces back to something: a census PALETTE entry, a stop inside a gradient token that line names, or a `:root` token marked as not from the reference (the page ground behind a fixed frame is the only one the method creates).
 
 ## Final pass
 
 Walk the census top to bottom one more time. For each line, point to the exact place in the rendered HTML that satisfies it. A census line with nothing to point to is a bug - fix the render, not the checklist.
+
+Then walk it in reverse: search the file for `#` and `rgb`, and point every literal you find back at a census line, a named gradient's stop set, or a marked not-from-the-reference token. This pass catches what the first one structurally cannot - a color the render invented satisfies every census line, because it is not on any of them.

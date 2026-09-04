@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0] - 2026-09-04
+
+- Closed the color rules, which left two colors with no legal place to live. Step 3 says every extracted color is a role-named custom property on `:root` and that no raw hex appears outside that block, and the census PALETTE line says it lists every distinct color in the reference. A multi-stop UI gradient satisfies none of it: written inline it is raw hex in a rule, split into `--gradient-1` through `--gradient-4` it is named by value, and put on the PALETTE line as four roles it claims four things the reference does not separate. A gradient is now one role holding the whole expression, with its stops written on the census line under that role.
+- Named the color the frame invented. The page ground behind a fixed frame is not in the reference - it exists because 1.2.0 centered the mockup in a browser window the reference never had - so it belongs on `:root` with a comment marking it as not from the reference, and it stays off the census PALETTE line, which reports the reference and nothing else.
+- The delivery self-check now runs in both directions. It only ever walked census to render, and that direction is structurally blind to an invented color: a hex on no census line contradicts no census line. The new pass searches the file for `#` and `rgb` and traces every literal back to a census entry, a named gradient's stops, or a marked not-from-the-reference token.
+- The README example was the bug in miniature, again: its body rule set `background: #E8E4DA`, a raw hex outside `:root` in a file demonstrating the rule against raw hex outside `:root`, and that color appeared nowhere in its own census. It now declares `--page-ground` with the marker comment and uses `var()`.
+- `references/census-checklist.md` gained the reverse pass and the gradient-as-one-role item, so the compact check and `SKILL.md` agree.
+
 ## [1.2.0] - 2026-08-14
 
 - Built the frame the clipping rule always assumed. Step 5 said to put a clipped item in "a container that overflows the frame", but nothing in the skill created a frame, and the default dimensions said the opposite: content height "may grow, never shrinks below 844". A document free to grow renders a half-visible row in full, which is the outcome Step 5 exists to forbid, so the two rules left no legal render.
