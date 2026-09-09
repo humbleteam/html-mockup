@@ -23,7 +23,7 @@ Study the reference image carefully. Before writing `<!doctype html>` or any CSS
   TEMPERATURE: warm|cool|neutral [warm = amber/olive/tan/gold tones; cool = blue/teal/slate]
   PHOTOS: [count] regions - [list each: "hero portrait 390x500", "food circle 60x60 x3", etc.]
   ITEMS PER SECTION: [exact counts - "3 list rows", "1 transaction", "5 nav tabs"]
-  CUT OFF AT EDGE: [none | each item the frame clips - "list row 4, top half visible", "card 3, left third visible"]
+  CUT OFF AT EDGE: [none | each item the frame clips, naming the edge that cuts it - "list row 4, bottom edge, top half visible", "carousel card 3, right edge, left third visible"]
   ACTIVE STATES: [which element is selected + how - "Home tab: filled icon + dot indicator"]
   BUTTON FILLS: [per button: filled-dark|filled-color|outlined|ghost - "Save: filled #1A1A1A, Delete: outlined red"]
 -->
@@ -75,7 +75,7 @@ Render exactly the number of items the census counted. Three rows in the referen
 
 An item the frame cuts in half is neither empty space nor a fourth item. It is the reference telling you the list scrolls, and it is the one place the count lock has to be read carefully: count fully visible items and clipped items separately in the census, then render both.
 
-- Render the clipped item clipped, cut where the reference cuts it - put the list in a container that overflows the frame rather than trimming the markup. The cut lands inside the item, not in the gap between two items. The frame is a real element with a fixed height, and a census with anything on the CUT OFF AT EDGE line is what calls for one: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
+- Render the clipped item clipped, cut where the reference cuts it - put the list in a container that overflows the frame rather than trimming the markup. The cut lands inside the item, not in the gap between two items. The frame is a real element, fixed on the axis its cut runs across, and a census with anything on the CUT OFF AT EDGE line is what calls for one: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
 - Never complete a clipped item into a full row. That adds an item the reference does not show and turns a scroll cue into a longer list.
 - Never drop it either. Three rows and a half rendered as three rows leaves dead space underneath and reads as a short screen instead of a scrolling one - the same failure as padding, pointing the other way.
 - A clipped item follows every other rule unchanged: same placeholder photo sources, same palette, same states as its full siblings.
@@ -109,12 +109,16 @@ Use these unless the request or reference specifies otherwise:
 
 Mobile is the default when the target device is unstated.
 
-Whether that height is a floor or a fixed edge is decided by the census, not by the device:
+Whether that height is a floor or a fixed edge is decided by the census, not by the device - and by the edge named on the CUT OFF AT EDGE line, because a clipped item is evidence about the edge that cuts it and no other:
 
 - **`CUT OFF AT EDGE: none`** - the height is a floor. Content may grow past it and never shrinks below it. A full-page capture of a long screen has no viewport edge in it, and forcing it back to 844px would invent a cut the reference does not show.
-- **Any entry on that line** - the height is fixed. The reference's bottom edge is the viewport, which is what a clipped item is evidence of, and a document free to grow renders that item in full: the one outcome Step 5 forbids.
+- **An item cut by the bottom or top edge** - the height is fixed. That edge is the viewport, which is what the clipped item is evidence of, and a document free to grow renders that item in full: the one outcome Step 5 forbids.
+- **Every item on the line cut by the left or right edge** - the height stays a floor. A carousel card peeking off the right says where the screen ends sideways and nothing about where it ends below, so a full-page capture that has one keeps its floor for the same reason `none` does. Fixing the height on that evidence hides every item past 844px - items the census counted and Step 5 requires rendered, sitting in the markup where a count check still finds them.
+- **Items cut on both** - the height is fixed, and the frame cuts both ways.
 
-A fixed height needs an element to belong to. "Overflows the frame" is not a property of the document, so build the frame: one container at the census width and height, `overflow: hidden`, with the content in normal flow inside it. The clipped item then cuts where the container ends, which is where the reference cuts it. Center the frame on the page so the size of the browser window stops changing what the mockup looks like.
+A cut needs an element to be cut by. "Overflows the frame" is not a property of the document, so build the frame whenever that line is not `none`: one container at the census width, `overflow: hidden`, content in normal flow inside it, centered on the page so the size of the browser window stops changing what the mockup looks like. Write the height as `height: 844px` when it is fixed and `min-height: 844px` when it is a floor - an auto height grows with the content in it, so `overflow: hidden` has nothing to cut vertically and the floor still holds. The width is a fixed size in both cases: it is the reference's own width, and a block box does not widen to fit its content the way an auto height grows, so there is no floor to write there. Do not reach for `overflow-x: hidden` with `overflow-y: visible` instead - CSS resolves the visible axis to `auto`, and the scrollbar that appears is an element the reference does not show.
+
+A horizontal cut also needs a row that reaches the frame's edge. Content in normal flow fits the width it is given: a row of cards shrinks them below their census width or wraps them onto a second line, and both render the peeking card whole - the same failure as a document free to grow, arriving sideways. Let the row run past the frame instead: no wrapping, each item holding its census width (`flex: 0 0 280px`).
 
 Use `overflow-y: auto` in place of `hidden` only when the reference shows a scrollbar, or when the user asks for a scrollable prototype rather than a still image. A scrollbar the reference does not show is a visual element the render invented.
 
@@ -131,7 +135,7 @@ When the census lists anything under CUT OFF AT EDGE, the markup carries the fra
 - Reference font is unclear or a custom font you can't identify: use the nearest system font stack (e.g. `-apple-system, "Segoe UI", Roboto, sans-serif`) and note the substitution in a code comment near the `font-family` declaration.
 - Reference is blurry or too small to extract exact hex values: say so, extract your best estimate, and mark the uncertain palette entries in the census rather than presenting a guess as measured fact.
 - Frame is an arbitrary crop rather than a device screen: a device screenshot's bottom edge is the viewport, so an item cut there means the content scrolls. A crop's edge is wherever someone dragged the selection box and means nothing about scrolling. When you cannot tell which you are looking at, treat it as a device viewport, write the assumption into the census next to the cut item, and say so on delivery.
-- Content clipped horizontally (a carousel card peeking off the right edge, a wide table): same rule as a vertical cut - render the peek at the width the reference shows, never rounded up to a full card or dropped.
+- Content clipped horizontally (a carousel card peeking off the right edge, a wide table): same rule as a vertical cut, applied to the other axis - render the peek at the width the reference shows, never rounded up to a full card or dropped. It fixes the frame's width, leaves the height as it found it, and needs a row that does not wrap or shrink to fit: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
 - Reference shows a scrollbar or scroll indicator but no partially visible item: record it in the census as a scroll cue, render the indicator, and do not invent extra rows to justify it.
 
 ## Before you deliver: self-check
@@ -140,9 +144,9 @@ Re-read your own census against your own render. For each line in the census, fi
 
 Then walk color the other way, because the pass above cannot see this one. Search the file for `#` and for `rgb`, and account for every literal you find: it is inside the `:root` block, and it is either a color the census PALETTE line lists, a stop inside a gradient token whose role that line names, or a token carrying the not-from-the-reference comment from Step 3 rule 6. A hex that matches no census line still satisfies every census line, so census-to-render alone will pass a file that has quietly invented a color or hard-coded one in a rule.
 
-Check the CUT OFF AT EDGE line at the census dimensions specifically: every item listed there is still clipped in the render, the cut falls inside the item rather than between two of them, and none has quietly grown into a whole one.
+Check the CUT OFF AT EDGE line at the census dimensions specifically: every item listed there is still clipped in the render, cut by the edge the census names, the cut falls inside the item rather than between two of them, and none has quietly grown into a whole one.
 
-If that line is not `none`, confirm the frame exists before checking anything inside it: a container fixed at the census width and height, with `overflow` hidden rather than visible. A mockup that scrolls the page instead of the frame passes every count and still shows the clipped item in full, because the document grew to fit it.
+If that line is not `none`, confirm the frame exists before checking anything inside it: a container at the census width with `overflow` hidden rather than visible, and a height that is fixed only when the census names a cut at the bottom or top edge, `min-height` otherwise. A mockup that scrolls the page instead of the frame passes every count and still shows the clipped item in full, because the document grew to fit it. A height fixed on a horizontal cut fails the opposite way and is harder to catch: every count still matches, because every item is in the markup - the frame is hiding the ones past its edge.
 
 ## Reference material
 

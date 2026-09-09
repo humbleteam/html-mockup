@@ -71,7 +71,7 @@ The first lines inside the delivered `.html` file always look like this, before 
   TEMPERATURE: warm
   PHOTOS: 4 regions - hero portrait 390x480, avatar circle 48x48 x3
   ITEMS PER SECTION: 3 list rows, 5 nav tabs
-  CUT OFF AT EDGE: list row 4, top half visible at the bottom of the frame
+  CUT OFF AT EDGE: list row 4, bottom edge, top half visible
   ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
   BUTTON FILLS: Save: filled #1A1A1A, Cancel: outlined #7A6A52
 -->
@@ -89,7 +89,7 @@ The first lines inside the delivered `.html` file always look like this, before 
     --page-ground: #E8E4DA;
   }
   body { background: var(--page-ground); display: flex; justify-content: center; }
-  /* CUT OFF AT EDGE is not none, so the height is fixed and the frame does the clipping */
+  /* The census cuts row 4 at the bottom edge, so the height is fixed and the frame does the clipping */
   .frame {
     width: 390px; height: 844px; overflow: hidden;
     background: var(--bg-primary); color: var(--text-primary);
@@ -106,7 +106,28 @@ The first lines inside the delivered `.html` file always look like this, before 
 </html>
 ```
 
-(Example fixture only - the palette and counts above are illustrative, not from a real client project.)
+When the cut runs the other way, the frame changes with it. A reference whose carousel peeks off the right edge but shows no bottom edge at all - a full-page capture of a long screen - still clips sideways at the census width, and keeps the height a floor, because the peeking card is evidence about the right edge and nothing else:
+
+```html
+<!-- CENSUS:
+  ...
+  ITEMS PER SECTION: 2 carousel cards fully visible, 6 list rows
+  CUT OFF AT EDGE: carousel card 3, right edge, left third visible
+  ...
+-->
+```
+
+```css
+  /* Cut is horizontal only: width fixed, height a floor, so the 6 rows below stay visible */
+  .frame { width: 390px; min-height: 844px; overflow: hidden; }
+  /* The row has to reach the frame's edge - without this the cards shrink or wrap and card 3 renders whole */
+  .carousel { display: flex; flex-wrap: nowrap; gap: 12px; }
+  .carousel > .card { flex: 0 0 280px; }
+```
+
+A fixed `height: 844px` here would pass every count - all 6 rows are in the markup - while hiding the ones the frame cannot show.
+
+(Example fixtures only - the palettes and counts above are illustrative, not from a real client project.)
 
 ## How it works
 
@@ -118,7 +139,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 - **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it. A row the frame cuts in half stays cut in half - that half row is a scroll cue, not a rounding error.
 - **Icons are inline SVG with a matching metaphor**, never emoji or a generic stand-in for the shape actually shown in the reference.
 - **Defaults fill the gaps.** Mobile 390x844, tablet 768x1024, desktop 1440x900 when the device isn't specified; nearest system font stack, flagged in a comment, when the typeface can't be identified.
-- **The census decides what the height means.** With nothing clipped, the default height is a floor and long content grows past it. With a clipped item, it's a fixed edge, and the mockup gets a real frame element that does the cutting - otherwise the page simply grows and renders that half row in full.
+- **The census decides what the height means, and which edge cut it.** With nothing clipped, the default height is a floor and long content grows past it. With an item cut at the bottom edge, it's a fixed edge, and the mockup gets a real frame element that does the cutting - otherwise the page grows and renders that half row in full. An item cut at the left or right edge is evidence about that edge only: the frame still clips sideways, and the height stays a floor, since fixing it there would hide every item below the fold instead.
 
 ## How is this different from just asking the model?
 
