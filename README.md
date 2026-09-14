@@ -36,6 +36,7 @@ Paste a screenshot, ask for a coded version, and this Claude Code skill writes a
 - Renders the exact number of items counted in the reference, never padding a section to fill the viewport.
 - Keeps an item the frame cuts in half cut in half, because that half row is the reference saying the list scrolls - completing it adds content that isn't there, dropping it turns a scrolling screen into a short one with dead space.
 - Builds the frame that does the clipping: a container fixed at the census dimensions, so the mockup looks the same in any browser window instead of stretching until nothing is cut off any more.
+- Counts a scrollbar the reference shows as its own kind of evidence, on its own census line: it calls for the same frame a clipped item does, and it gets rendered as the bar in the reference rather than left to an `overflow` rule that produces none.
 
 ## Quick start
 
@@ -72,6 +73,7 @@ The first lines inside the delivered `.html` file always look like this, before 
   PHOTOS: 4 regions - hero portrait 390x480, avatar circle 48x48 x3
   ITEMS PER SECTION: 3 list rows, 5 nav tabs
   CUT OFF AT EDGE: list row 4, bottom edge, top half visible
+  SCROLL CUE: none
   ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
   BUTTON FILLS: Save: filled #1A1A1A, Cancel: outlined #7A6A52
 -->
@@ -113,6 +115,7 @@ When the cut runs the other way, the frame changes with it. A reference whose ca
   ...
   ITEMS PER SECTION: 2 carousel cards fully visible, 6 list rows
   CUT OFF AT EDGE: carousel card 3, right edge, left third visible
+  SCROLL CUE: none
   ...
 -->
 ```
@@ -139,7 +142,7 @@ A fixed `height: 844px` here would pass every count - all 6 rows are in the mark
 - **Counts are locked.** Three list rows in the reference means three in the output. Nothing gets added to fill space, nothing gets dropped to save it. A row the frame cuts in half stays cut in half - that half row is a scroll cue, not a rounding error.
 - **Icons are inline SVG with a matching metaphor**, never emoji or a generic stand-in for the shape actually shown in the reference.
 - **Defaults fill the gaps.** Mobile 390x844, tablet 768x1024, desktop 1440x900 when the device isn't specified; nearest system font stack, flagged in a comment, when the typeface can't be identified.
-- **The census decides what the height means, and which edge cut it.** With nothing clipped, the default height is a floor and long content grows past it. With an item cut at the bottom edge, it's a fixed edge, and the mockup gets a real frame element that does the cutting - otherwise the page grows and renders that half row in full. An item cut at the left or right edge is evidence about that edge only: the frame still clips sideways, and the height stays a floor, since fixing it there would hide every item below the fold instead.
+- **The census decides what the height means, and which edge cut it.** With nothing clipped, the default height is a floor and long content grows past it. With an item cut at the bottom edge, it's a fixed edge, and the mockup gets a real frame element that does the cutting - otherwise the page grows and renders that half row in full. An item cut at the left or right edge is evidence about that edge only: the frame still clips sideways, and the height stays a floor, since fixing it there would hide every item below the fold instead. A visible scrollbar with nothing clipped is the same evidence without an item to carry it - a full-page capture has no scrollbar in it - so it gets its own census line and fixes the height the same way.
 
 ## How is this different from just asking the model?
 
@@ -167,6 +170,9 @@ Any screenshot Claude can view in the conversation - PNG, JPG, or a pasted image
 
 **Where do colors the reference does not contain go?**
 There is normally one: the page ground behind the frame, which exists only because the mockup is centered in a browser window the reference never had. It is declared on `:root` like every other color and carries a comment saying it is not from the reference, and it stays off the census PALETTE line, since that line reports what the reference shows. The delivery check looks for exactly this - any literal color that traces to neither the census nor a marked token is one the render invented.
+
+**The reference shows a scrollbar but nothing is cut off - what then?**
+It goes on the census `SCROLL CUE` line, not on the clipped-item line, and it still calls for the frame: a full-page capture of a long screen has no scrollbar in it either, so a bar in the image says the same thing a half-visible row does about where the screen ends. The bar then has to be rendered as the reference shows it, with `overflow-y: scroll` or the styled indicator itself. Reaching for `overflow-y: auto` produces nothing, because everything the census counted is visible and so nothing overflows - and padding the list until a bar appears invents rows the reference never had.
 
 **What does the output actually contain?**
 One self-contained `.html` file: full document structure, an inline `<style>` block with CSS custom properties, no external stylesheet, framework, or build step. It opens directly in a browser.
