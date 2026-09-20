@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0] - 2026-09-20
+
+- The scroll-cue branch added in 1.5.0 had no rendered instance anywhere in the repo. Both README examples carry `SCROLL CUE: none`, so the one census that builds a frame with nothing clipped - the case the 1.5.0 FAQ answer is written for - existed only as prose. New worked example: the census line, the fixed height, and the bar as a drawn element inside the frame.
+- Writing it showed that `overflow-y: scroll` cannot render the cue either, for the same reason `auto` cannot. Nothing overflows: the census counted content that stops at the frame's edge. `auto` answers that with no bar, and `scroll` answers it with a track whose thumb spans the full length - and on a platform drawing overlay scrollbars, the macOS default, with nothing at all until something is scrolled. A reference whose thumb sits at a position, a third of the track long, is showing how much of the screen is below the fold, and the styled element is the only route that renders it. `overflow-y: scroll` is now scoped to a bare platform track where a full-length thumb changes nothing.
+- The remedy also prescribed one axis and left the other unsaid. `overflow-y: scroll` alone leaves `overflow-x` at its initial `visible`, and CSS resolves a visible axis to `auto` when the other axis is not visible - the rule this skill already cites against `overflow-x: hidden` with `overflow-y: visible`, arriving from the other side. The frame is then free to grow a horizontal bar on the axis it exists to clip. The pair is written out now, and a drawn indicator is named as the route that keeps plain `overflow: hidden`.
+- The cue's own color is a color the reference contains, so it goes on the census PALETTE line like every other. Said explicitly, because the page ground of Step 3 rule 6 is the only token that stays off it and a bar drawn by the render reads like a second one.
+- The delivery self-check, `references/census-checklist.md` and the README FAQ answer carry both points, so the compact check and `SKILL.md` agree.
+
 ## [1.5.0] - 2026-09-14
 
 - The scroll-cue edge case pointed at a census line that does not exist. It said to record a scrollbar shown with nothing clipped "in the census as a scroll cue", and the census has seven fields, none of them for one. The nearest, `CUT OFF AT EDGE`, is the wrong home: it lists items the frame clips, and the delivery check walks it asking whether each entry is still clipped in the render and whether the cut falls inside the item. A scrollbar is not an item and is not clipped, so it fails both questions by being what it is. The census now carries a `SCROLL CUE` line of its own, naming what scrolls and where the bar sits.

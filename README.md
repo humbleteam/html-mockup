@@ -130,6 +130,33 @@ When the cut runs the other way, the frame changes with it. A reference whose ca
 
 A fixed `height: 844px` here would pass every count - all 6 rows are in the markup - while hiding the ones the frame cannot show.
 
+The third case has no clipped item at all. A reference showing a scrollbar and nothing cut off is the same viewport evidence with no item carrying it, and it is the one census where the bar has to be drawn rather than produced by an `overflow` rule:
+
+```html
+<!-- CENSUS:
+  PALETTE: bg=#FFFFFF text=#111827 accent=#2563EB secondary=#6B7280 scrollbar=#C7CBD1
+  ...
+  ITEMS PER SECTION: 7 settings rows, 3 section headers
+  CUT OFF AT EDGE: none
+  SCROLL CUE: vertical scrollbar, page, right edge, thumb about a third of the track
+  ...
+-->
+```
+
+```css
+  /* Vertical cue with nothing clipped: the height is fixed and the frame still clips both ways */
+  .frame { position: relative; width: 390px; height: 844px; overflow: hidden; }
+  /* The 7 counted rows stop at the frame's edge, so nothing overflows and no overflow value can
+     produce this thumb: `scroll` would return a full-length track, `auto` nothing at all. */
+  .scroll-cue {
+    position: absolute; top: 8px; right: 2px;
+    width: 3px; height: 276px; border-radius: 2px;
+    background: var(--scrollbar);
+  }
+```
+
+The bar's own color is a color the reference shows, so it is on the PALETTE line like any other - the page ground is still the only token that stays off it. Handing the bar to the platform instead takes both axes written out, `overflow-x: hidden; overflow-y: scroll`: `overflow-y` alone leaves `overflow-x` computing to `auto`, and the horizontal bar that can appear there is an element the reference never had.
+
 (Example fixtures only - the palettes and counts above are illustrative, not from a real client project.)
 
 ## How it works
@@ -172,7 +199,7 @@ Any screenshot Claude can view in the conversation - PNG, JPG, or a pasted image
 There is normally one: the page ground behind the frame, which exists only because the mockup is centered in a browser window the reference never had. It is declared on `:root` like every other color and carries a comment saying it is not from the reference, and it stays off the census PALETTE line, since that line reports what the reference shows. The delivery check looks for exactly this - any literal color that traces to neither the census nor a marked token is one the render invented.
 
 **The reference shows a scrollbar but nothing is cut off - what then?**
-It goes on the census `SCROLL CUE` line, not on the clipped-item line, and it still calls for the frame: a full-page capture of a long screen has no scrollbar in it either, so a bar in the image says the same thing a half-visible row does about where the screen ends. The bar then has to be rendered as the reference shows it, with `overflow-y: scroll` or the styled indicator itself. Reaching for `overflow-y: auto` produces nothing, because everything the census counted is visible and so nothing overflows - and padding the list until a bar appears invents rows the reference never had.
+It goes on the census `SCROLL CUE` line, not on the clipped-item line, and it still calls for the frame: a full-page capture of a long screen has no scrollbar in it either, so a bar in the image says the same thing a half-visible row does about where the screen ends. The bar then has to be rendered as the reference shows it. Reaching for `overflow-y: auto` produces nothing, because everything the census counted is visible and so nothing overflows - and padding the list until a bar appears invents rows the reference never had. `overflow-y: scroll` runs into the same fact from the other side: with nothing overflowing it returns a track whose thumb spans its full length, and none at all where the platform draws overlay scrollbars. A reference whose thumb sits at a position is showing how much is below the fold, and only a styled element renders that.
 
 **What does the output actually contain?**
 One self-contained `.html` file: full document structure, an inline `<style>` block with CSS custom properties, no external stylesheet, framework, or build step. It opens directly in a browser.
