@@ -20,7 +20,8 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] The active navigation tab differs from inactive tabs by at least two simultaneous signals (icon style, color, indicator dot/line, weight) - a single color change is not enough.
 - [ ] Floating action buttons have visible elevation (`box-shadow`), correct size (56-64px), and correct overlap with whatever they sit above.
 - [ ] Notification dots are sized 8-10px, colored to match the reference, and have a ring in the surrounding background color.
-- [ ] Photo regions use real `<img>` tags (picsum.photos, i.pravatar.cc), never a gradient.
+- [ ] Photo regions use real `<img>` tags (picsum.photos, i.pravatar.cc), never a gradient, a solid block or a flat SVG shape, and no two general photos share a `random` seed.
+- [ ] The delivery note says the file pulls its photos from those two hosts and needs a connection to show them. Self-contained is a claim about files, not about the network: offline, every photo slot renders a broken-image icon. Where the user has said it will be opened offline, the real photographs are embedded as data URIs instead.
 - [ ] No raw hex values exist outside the `:root` custom-property block - gradient stops included, which means each UI gradient is one role-named token holding the whole expression, never one token per stop and never written inline.
 - [ ] Item counts in the render match item counts in the census exactly - no added "filler" items, nothing dropped to save space.
 - [ ] Every clipped item is still clipped in the render, cut by the edge the census names and inside the item rather than in the gap between two - never completed into a full row, never dropped, never replaced by empty space.

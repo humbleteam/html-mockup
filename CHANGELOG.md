@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0] - 2026-09-25
+
+- The photo regions are the one part of a self-contained file that is not in the file, and nothing said so. Step 2 sends every photograph to `picsum.photos` or `i.pravatar.cc`, and Output format promised a document that "must open correctly in a browser with no other files present" - true about files, and silent about the network. Offline, or behind a proxy that blocks those hosts, every photo slot renders the browser's broken-image icon: the fake look Step 2 exists to prevent, arriving from the other side and worse than the gradient it replaced.
+- Nothing in the render fixes it, so the dependency is named rather than patched. Every offline stand-in within reach is one Step 2 already rules out, and a solid block or a flat SVG shape is the gradient's failure with the gradient taken out. Step 2 now says to state on delivery which hosts the mockup pulls from, and Output format says self-contained is a claim about files and not about the network.
+- New edge case for a file that will be opened offline or on a network that blocks those hosts: ask for the real photographs and embed them as data URIs, which is an ask and not a fallback, since the skill has no image of its own to embed. Where they cannot be supplied, deliver as normal and say plainly that the photo slots will be empty there.
+- The delivery self-check had the same hole as the file. `PHOTOS` is the one census line the census-to-render walk can satisfy on a mockup whose photos never appear, because what it points at is the `<img>` tag and not the image - so the check now reads the tags: every counted region an `<img>` on one of the two hosts, no two general photos sharing a `random` seed, and no region quietly rendered as a gradient, a solid block or an SVG shape.
+- `references/census-checklist.md` and the README FAQ carry the same two points, so the compact check, the FAQ and `SKILL.md` agree.
+
 ## [1.6.0] - 2026-09-20
 
 - The scroll-cue branch added in 1.5.0 had no rendered instance anywhere in the repo. Both README examples carry `SCROLL CUE: none`, so the one census that builds a frame with nothing clipped - the case the 1.5.0 FAQ answer is written for - existed only as prose. New worked example: the census line, the fixed height, and the bar as a drawn element inside the frame.

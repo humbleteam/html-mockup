@@ -201,8 +201,11 @@ There is normally one: the page ground behind the frame, which exists only becau
 **The reference shows a scrollbar but nothing is cut off - what then?**
 It goes on the census `SCROLL CUE` line, not on the clipped-item line, and it still calls for the frame: a full-page capture of a long screen has no scrollbar in it either, so a bar in the image says the same thing a half-visible row does about where the screen ends. The bar then has to be rendered as the reference shows it. Reaching for `overflow-y: auto` produces nothing, because everything the census counted is visible and so nothing overflows - and padding the list until a bar appears invents rows the reference never had. `overflow-y: scroll` runs into the same fact from the other side: with nothing overflowing it returns a track whose thumb spans its full length, and none at all where the platform draws overlay scrollbars. A reference whose thumb sits at a position is showing how much is below the fold, and only a styled element renders that.
 
+**Does the mockup work offline?**
+The HTML does; the photographs do not. There is no sibling stylesheet, image folder or build step, so the file opens directly - but the photo regions are `<img>` tags pointing at picsum.photos and i.pravatar.cc, and with no connection each one renders as a broken-image icon. Self-contained is a claim about files, not about the network, and the delivery note says so. If the file has to open offline, supply the real photographs and they get embedded as data URIs. There is no stand-in that works: every offline substitute available - a gradient, a solid block, a flat SVG shape - is one the method already rules out for looking fake, and looking fake quietly is worse than a broken icon that announces itself.
+
 **What does the output actually contain?**
-One self-contained `.html` file: full document structure, an inline `<style>` block with CSS custom properties, no external stylesheet, framework, or build step. It opens directly in a browser.
+One self-contained `.html` file: full document structure, an inline `<style>` block with CSS custom properties, no external stylesheet, framework, or build step. It opens directly in a browser, though the placeholder photos need a connection to load.
 
 ## Related skills
 

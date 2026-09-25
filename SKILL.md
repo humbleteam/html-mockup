@@ -46,6 +46,8 @@ Wherever the reference shows a photograph (portrait, food, product, room, landsc
 - Circular thumbnails (avatars, food): `border-radius: 50%; width: {n}px; height: {n}px; object-fit: cover;`.
 - Never use `radial-gradient` or `linear-gradient` in place of a photo. Multi-stop gradients read as a broken placeholder at any zoom level, never as a photograph.
 
+Both services are remote, so the photo regions are the one part of the file that is not in the file. On a machine with no connection, or behind a proxy that blocks those hosts, every `<img>` renders as the browser's broken-image icon: the fake look this step exists to prevent, arriving from the other side and worse than the gradient it replaced. Nothing in the render fixes that. Every offline stand-in within reach is one the list above already rules out, and a solid block or a flat SVG shape is the gradient's failure with the gradient taken out, so the dependency is named rather than patched. Say on delivery that the mockup pulls its photos from `picsum.photos` and `i.pravatar.cc` and needs a connection to show them. Where the user says the file will be opened offline - a flight, an air-gapped review, a deck that travels - ask for the real photographs and embed them as data URIs. That is an ask and not a fallback: the skill has no image of its own to embed.
+
 ## Step 3: Exact color matching
 
 1. Extract hex values from the reference by close observation, not by naming the nearest CSS color keyword. A warm dark grey (`#1A1A1A`) is not the same as a cool near-black (`#0D1A0F`); a warm off-white (`#F5F2EB`) is not the same as pure white (`#F5F5F5`).
@@ -131,7 +133,7 @@ Write the frame's two axes separately whenever either one is not `hidden`. `over
 
 ## Output format
 
-Deliver one self-contained `.html` file: a full `<!doctype html>` document with an inline `<style>` block (no external stylesheet, no build step, no framework), the census comment as the first lines, and CSS custom properties on `:root`. The file must open correctly in a browser with no other files present.
+Deliver one self-contained `.html` file: a full `<!doctype html>` document with an inline `<style>` block (no external stylesheet, no build step, no framework), the census comment as the first lines, and CSS custom properties on `:root`. The file must open correctly in a browser with no other files present - no sibling stylesheet, no image folder, no build output. That is a claim about files and not about the network: the photo regions of Step 2 load from `picsum.photos` and `i.pravatar.cc`, so a machine with no connection opens the document correctly and still shows a broken-image icon in every photo slot. Name the dependency on delivery (Step 2).
 
 When the census lists anything under CUT OFF AT EDGE, the markup carries the frame container described above, and the file renders the same at any window size.
 
@@ -144,10 +146,13 @@ When the census lists anything under CUT OFF AT EDGE, the markup carries the fra
 - Frame is an arbitrary crop rather than a device screen: a device screenshot's bottom edge is the viewport, so an item cut there means the content scrolls. A crop's edge is wherever someone dragged the selection box and means nothing about scrolling. When you cannot tell which you are looking at, treat it as a device viewport, write the assumption into the census next to the cut item, and say so on delivery.
 - Content clipped horizontally (a carousel card peeking off the right edge, a wide table): same rule as a vertical cut, applied to the other axis - render the peek at the width the reference shows, never rounded up to a full card or dropped. It fixes the frame's width, leaves the height as it found it, and needs a row that does not wrap or shrink to fit: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
 - Reference shows a scrollbar or scroll indicator but no partially visible item: it goes on the census SCROLL CUE line, never on CUT OFF AT EDGE - a bar is not an item, and the clipped-item checks have nothing to check on one. It still calls for the frame, and a vertical bar still fixes the height, because a full-page capture has no scrollbar in it either. Render the bar the way the reference shows it and do not invent extra rows to justify it: see [Default dimensions and the frame](#default-dimensions-and-the-frame).
+- File will be opened offline, or on a network that blocks the placeholder hosts: ask for the real photographs and embed them as data URIs before delivering. Do not substitute a gradient, a solid block or an SVG shape for the remote placeholder - Step 2 rules all three out, and a stand-in that quietly looks fake is worse than a broken-image icon, which at least announces itself. If the images cannot be supplied, deliver as normal and say plainly that the photo slots will be empty on that machine.
 
 ## Before you deliver: self-check
 
 Re-read your own census against your own render. For each line in the census, find the matching value in the HTML. If any census line has no matching render output - a color, a count, a state - fix the render before sending it. A mismatch between the census and the render is the single failure mode this skill exists to prevent.
+
+PHOTOS is the one line that walk can satisfy on a file whose photos never appear, because what it points at is the `<img>` tag and not the image. Check the tags themselves: every counted region is an `<img>` whose `src` is on `picsum.photos` or `i.pravatar.cc`, no two general photos share a `random` seed, and no region was quietly rendered as a gradient, a solid block or an SVG shape. Then say on delivery that those two hosts have to be reachable. It is the only census line whose render output lives somewhere other than the file.
 
 Then walk color the other way, because the pass above cannot see this one. Search the file for `#` and for `rgb`, and account for every literal you find: it is inside the `:root` block, and it is either a color the census PALETTE line lists, a stop inside a gradient token whose role that line names, or a token carrying the not-from-the-reference comment from Step 3 rule 6. A hex that matches no census line still satisfies every census line, so census-to-render alone will pass a file that has quietly invented a color or hard-coded one in a rule.
 
