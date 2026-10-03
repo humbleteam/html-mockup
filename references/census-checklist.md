@@ -5,7 +5,7 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 ## Census fields
 
 - [ ] **PALETTE** - every distinct color in the reference is listed with an exact hex value, not a nearest-named color. Backgrounds, text, accent, and secondary colors are all present.
-- [ ] **TEMPERATURE** - the reference is classified warm, cool, or neutral, and every neutral color in the render matches that temperature.
+- [ ] **TEMPERATURE** - the reference is classified warm, cool, or neutral, and every neutral color in the render matches that temperature, read off the channels rather than by eye: red above blue is warm, blue above red is cool, the two equal is neither. The neutrals are the backgrounds, surfaces, text, borders and the page ground, never the tokens that read as a color (accent, brand fill, success green, notification red, a gradient's stops) - a warm red inside a cool screen is the reference's own. A neutral leaning against the census is a render bug; one sitting dead even is a look-again, since a flat grey is both a color a reference can contain and the shape of a skipped extraction.
 - [ ] **PHOTOS** - every photographic region is counted with its approximate dimensions and content ("hero portrait 390x500", "food circle 60x60 x3").
 - [ ] **ITEMS PER SECTION** - every repeating group (list rows, cards, tabs, buttons) has an exact count, not an approximation.
 - [ ] **CUT OFF AT EDGE** - every item the frame clips is listed with the edge that cuts it and how much of it shows ("list row 4, bottom edge, top half visible"), counted separately from the fully visible ones, or the line reads `none`. The edge is what the frame rule reads, so a cut with no edge named cannot be checked.
@@ -38,3 +38,5 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 Walk the census top to bottom one more time. For each line, point to the exact place in the rendered HTML that satisfies it. A census line with nothing to point to is a bug - fix the render, not the checklist.
 
 Then walk it in reverse: search the file for `#` and `rgb`, and point every literal you find back at a census line, a named gradient's stop set, or a marked not-from-the-reference token. This pass catches what the first one structurally cannot - a color the render invented satisfies every census line, because it is not on any of them.
+
+While the literals are in front of you, read the neutrals among them against the TEMPERATURE line. That pass is not the same as the one above: a cool grey in a warm palette traces back to the census PALETTE line perfectly and is still the mismatch rule 4 calls visible at thumbnail size.
