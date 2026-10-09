@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.9.0] - 2026-10-09
+
+- 1.8.0 gave `TEMPERATURE` a channel test in the delivery self-check, and left Step 3 rule 1 illustrating the warm/cool distinction with `#1A1A1A` as "a warm dark grey" - a hex whose three channels are dead even, which the new test files as having no lean at all. The skill's own example of the distinction was an instance of the case the test exists to catch.
+- The cause was the test's position, not its wording. It lived only in the self-check, which runs at delivery, while colors are extracted in rule 1 - and rule 1 had nothing but the hue words of rule 4, which describe a color the reference chose and fit an even-channelled near-grey just as comfortably as a leaning one. The read now happens in rule 1, where the value is written down, and the self-check runs the same read over the whole palette against the census line, which is the one disagreement a correctly extracted color can still produce.
+- Both halves of rule 1's pair are corrected to be instances of it: `#1A1512` (26, 21, 18) against `#0D121A` (13, 18, 26). The old cool member, `#0D1A0F`, did pass the test, but by two steps out of 255 while its dominant channel was green - an illustration sitting on the test's boundary rather than showing it. The off-white pair keeps its hexes and `#F5F5F5` is now named as the third outcome rather than implied to be the cool one; it was never "pure white" either, which `#FFFFFF` is.
+- Rule 4 says in one clause that its hue words are for the color the reference chose and that a near-grey's lean is settled in rule 1, so the two rules no longer point at the same decision with different instruments.
+- The README worked example declares `TEMPERATURE: warm` and carried `#1A1A1A` as its text color in three places - the census PALETTE line, the `BUTTON FILLS` line and `--text-primary`. 1.8.0 recorded that both README palettes satisfied the test, which was true and is not the same as demonstrating it: the look-again branch is where a dead-even value lands. The text color is now `#1A1512`, so every neutral in the example leans the way its census says, `--page-ground: #E8E4DA` and `--bg-primary: #F5F2EB` included.
+- The README FAQ and `references/census-checklist.md` carry the correction, so the compact check, the FAQ and `SKILL.md` still agree on one test in one place.
+
 ## [1.8.0] - 2026-10-03
 
 - `TEMPERATURE` was the last census line with no check of its own in the delivery self-check, and the only one whose checklist entry already claimed one: `references/census-checklist.md` asked whether every neutral in the render matched the census temperature, and nothing anywhere said how to decide whether a given neutral matched. `CUT OFF AT EDGE`, `SCROLL CUE` and `PHOTOS` each earned a check, and `PALETTE` got the reverse color walk, so the claim without a test was the one gap left.

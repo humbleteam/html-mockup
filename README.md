@@ -68,14 +68,14 @@ The first lines inside the delivered `.html` file always look like this, before 
 
 ```html
 <!-- CENSUS:
-  PALETTE: bg=#F5F2EB text=#1A1A1A accent=#C9762F secondary=#7A6A52
+  PALETTE: bg=#F5F2EB text=#1A1512 accent=#C9762F secondary=#7A6A52
   TEMPERATURE: warm
   PHOTOS: 4 regions - hero portrait 390x480, avatar circle 48x48 x3
   ITEMS PER SECTION: 3 list rows, 5 nav tabs
   CUT OFF AT EDGE: list row 4, bottom edge, top half visible
   SCROLL CUE: none
   ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
-  BUTTON FILLS: Save: filled #1A1A1A, Cancel: outlined #7A6A52
+  BUTTON FILLS: Save: filled #1A1512, Cancel: outlined #7A6A52
 -->
 <!doctype html>
 <html lang="en">
@@ -84,7 +84,7 @@ The first lines inside the delivered `.html` file always look like this, before 
 <style>
   :root {
     --bg-primary: #F5F2EB;
-    --text-primary: #1A1A1A;
+    --text-primary: #1A1512;
     --accent: #C9762F;
     --secondary: #7A6A52;
     /* Not from the reference: the surround the frame sits on */
@@ -196,7 +196,7 @@ It works best with one. Without an image, the skill falls back to a described la
 Any screenshot Claude can view in the conversation - PNG, JPG, or a pasted image - works. A live URL works too if the agent can render or fetch it.
 
 **How do I check that a mockup's greys match the reference's warmth?**
-Compare red against blue in each one: red higher is warm, blue higher is cool, the two equal is neither, and every neutral in the file has to agree with the warm/cool/neutral line in the census. It is read off the channels because the words do not survive the step down to a near-grey - `#F5F2EB` and `#F5F5F5` are both off-whites and only one of them is warm. The check covers the backgrounds, surfaces, text, borders and the page ground, not the colors the reference chose: an accent, a success green or a notification red keeps its own hue. A neutral leaning the wrong way is a render bug, usually a surface left at a default instead of extracted. One sitting dead even gets a second look rather than a fix, since a flat grey is both something references contain and exactly what a default produces.
+Compare red against blue in each one: red higher is warm, blue higher is cool, the two equal is neither, and every neutral in the file has to agree with the warm/cool/neutral line in the census. It is read off the channels because the words do not survive the step down to a near-grey - `#F5F2EB` and `#F5F5F5` are both off-whites and only one of them is warm, and `#1A1A1A` is a near-black with no lean at all however naturally "warm dark grey" reads next to it. The same read runs at the point each color is extracted, not only at delivery, because an even-channelled near-grey is exactly what a surface left at a default looks like. The check covers the backgrounds, surfaces, text, borders and the page ground, not the colors the reference chose: an accent, a success green or a notification red keeps its own hue. A neutral leaning the wrong way is a render bug, usually a surface left at a default instead of extracted. One sitting dead even gets a second look rather than a fix, since a flat grey is both something references contain and exactly what a default produces.
 
 **Where do colors the reference does not contain go?**
 There is normally one: the page ground behind the frame, which exists only because the mockup is centered in a browser window the reference never had. It is declared on `:root` like every other color and carries a comment saying it is not from the reference, and it stays off the census PALETTE line, since that line reports what the reference shows. The delivery check looks for exactly this - any literal color that traces to neither the census nor a marked token is one the render invented.
