@@ -11,7 +11,8 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 - [ ] **CUT OFF AT EDGE** - every item the frame clips is listed with the edge that cuts it and how much of it shows ("list row 4, bottom edge, top half visible"), counted separately from the fully visible ones, or the line reads `none`. The edge is what the frame rule reads, so a cut with no edge named cannot be checked.
 - [ ] **SCROLL CUE** - a scrollbar or scroll indicator the reference shows with nothing clipped is recorded here, naming what scrolls and where the bar sits, or the line reads `none`. It never goes on `CUT OFF AT EDGE`: a bar is not an item, so the clipped-item checks have nothing to check on one.
 - [ ] **ACTIVE STATES** - the selected/active element in each group is named, with the specific visual signal that marks it as active.
-- [ ] **BUTTON FILLS** - every button is classified filled-dark, filled-color, outlined, or ghost, with its exact fill or border color.
+- [ ] **BUTTON FILLS** - every button is classified filled-dark, filled-color, outlined, or ghost, and names in parentheses the `PALETTE` role its fill or border uses rather than repeating that role's hex.
+- [ ] **One home per hex** - every hex in the census is on the `PALETTE` line, and every other line that mentions a color names a role instead. A fill carrying its own hex is a second copy to keep true, and the reverse pass below cannot catch it drifting: it sits on a census line, which is all that pass asks of a literal. A color that matches no `PALETTE` entry is a palette omission, since that line is every distinct color.
 
 ## State-fidelity rules
 
@@ -37,6 +38,6 @@ Read this before delivering a mockup, as a compact pre-flight check against the 
 
 Walk the census top to bottom one more time. For each line, point to the exact place in the rendered HTML that satisfies it. A census line with nothing to point to is a bug - fix the render, not the checklist.
 
-Then walk it in reverse: search the file for `#` and `rgb`, and point every literal you find back at a census line, a named gradient's stop set, or a marked not-from-the-reference token. This pass catches what the first one structurally cannot - a color the render invented satisfies every census line, because it is not on any of them.
+Then walk it in reverse: search the file for `#` and `rgb`, and point every literal you find back at a census `PALETTE` entry, a named gradient's stop set, or a marked not-from-the-reference token. This pass catches what the first one structurally cannot - a color the render invented satisfies every census line, because it is not on any of them.
 
 While the literals are in front of you, read the neutrals among them against the TEMPERATURE line. That pass is not the same as the one above: a cool grey in a warm palette traces back to the census PALETTE line perfectly and is still the mismatch rule 4 calls visible at thumbnail size.

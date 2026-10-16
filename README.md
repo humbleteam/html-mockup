@@ -75,7 +75,7 @@ The first lines inside the delivered `.html` file always look like this, before 
   CUT OFF AT EDGE: list row 4, bottom edge, top half visible
   SCROLL CUE: none
   ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
-  BUTTON FILLS: Save: filled #1A1512, Cancel: outlined #7A6A52
+  BUTTON FILLS: Save: filled-dark (text), Cancel: outlined (secondary)
 -->
 <!doctype html>
 <html lang="en">

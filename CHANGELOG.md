@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.0] - 2026-10-16
+
+- The census could carry a color in two places. `PALETTE` is "every distinct color, exact hex" and `BUTTON FILLS` asked for "its exact fill or border color", so one fill had two homes and nothing read them against each other. The reverse pass in `references/census-checklist.md` is the pass that would catch it, and it cannot: it asks every literal in the file to point back at a census line, which a hex sitting on `BUTTON FILLS` does. A `Save: filled #1A1A1A` beside a palette reading `text=#1A1512` is a color the reference never had, traceable to a census line, and clear of every check in the repo.
+- `BUTTON FILLS` now names the `PALETTE` role in parentheses - `Save: filled-dark (text)` - so the hex stays in one place and the classification stays in the other. A button whose fill matches no `PALETTE` entry is a palette omission rather than a button detail, because that line is every distinct color, so the color goes there first and the fill names its role.
+- New checklist item for the rule, one home per hex, placed with the census fields rather than with the final pass: it is a property of the census as written, catchable before anything is rendered. The reverse pass is tightened to the `PALETTE` line in the same move, which is what the file's last census-field item already said.
+- The stock example in the template was the one concrete hex in a block of `#___` placeholders, and it was `#1A1A1A` - the dead-even value 1.9.0 took out of Step 3 rule 1 for failing the temperature test the skill runs on every near-grey. Its partner, `Delete: outlined red`, named a color no `PALETTE` placeholder covered, which is the omission above in the example that teaches the line. Both are replaced by the two roles the README's own census carries.
+- The README worked example loses its repeated hexes the same way. Both were already on its `PALETTE` line, as `text` and `secondary`, so nothing about that file's colors moved - `--text-primary: #1A1512` and `--secondary: #7A6A52` are unchanged, and the render they describe is unchanged.
+- Seen and not taken: `ACTIVE STATES` carries the same looseness one step out. The template's stock example reads "Home tab: filled icon + dot indicator" and the README's census reads "filled icon + accent-color dot indicator" - a role named in one and left out of the other, on the line whose two-signal rule is the one state rule stated in all three files. A dot whose color is on no `PALETTE` entry is the omission above arriving through a state description.
+
 ## [1.9.0] - 2026-10-09
 
 - 1.8.0 gave `TEMPERATURE` a channel test in the delivery self-check, and left Step 3 rule 1 illustrating the warm/cool distinction with `#1A1A1A` as "a warm dark grey" - a hex whose three channels are dead even, which the new test files as having no lean at all. The skill's own example of the distinction was an instance of the case the test exists to catch.

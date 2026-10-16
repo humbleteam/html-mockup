@@ -26,12 +26,14 @@ Study the reference image carefully. Before writing `<!doctype html>` or any CSS
   CUT OFF AT EDGE: [none | each item the frame clips, naming the edge that cuts it - "list row 4, bottom edge, top half visible", "carousel card 3, right edge, left third visible"]
   SCROLL CUE: [none | a scrollbar or scroll indicator the reference shows with nothing clipped, naming what scrolls and where the bar sits - "vertical scrollbar, page, right edge", "pill indicator, carousel row, bottom"]
   ACTIVE STATES: [which element is selected + how - "Home tab: filled icon + dot indicator"]
-  BUTTON FILLS: [per button: filled-dark|filled-color|outlined|ghost - "Save: filled #1A1A1A, Delete: outlined red"]
+  BUTTON FILLS: [per button: filled-dark|filled-color|outlined|ghost, with the PALETTE role it uses in parentheses - "Save: filled-dark (text), Cancel: outlined (secondary)"]
 -->
 <!doctype html>
 ```
 
 This census is the contract for the rest of the task. Every hex value, every count, every state description written here must show up in the rendered HTML. If you render a 4th list row when the census says 3, that is a bug - go back and fix the render, not the census.
+
+Every hex in the census sits on the `PALETTE` line and nowhere else. `BUTTON FILLS` names the role whose hex that line already carries, because a second copy of a value is a second thing to keep true, and this one is unguarded: a fill written `#1A1A1A` beside a palette reading `text=#1A1512` traces back to a census line perfectly, so the reverse pass in `references/census-checklist.md` clears it and nothing else is looking. A button whose fill is on no `PALETTE` entry is a palette that missed a color, not a button detail - that line is every distinct color - so the color goes there first and the fill names its role.
 
 If you are working from a text description instead of an image (no reference provided), write the census anyway using your best judgment, and mark every guessed field with `[assumed]` so the user can correct it in one pass.
 
