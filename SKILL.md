@@ -25,7 +25,7 @@ Study the reference image carefully. Before writing `<!doctype html>` or any CSS
   ITEMS PER SECTION: [exact counts - "3 list rows", "1 transaction", "5 nav tabs"]
   CUT OFF AT EDGE: [none | each item the frame clips, naming the edge that cuts it - "list row 4, bottom edge, top half visible", "carousel card 3, right edge, left third visible"]
   SCROLL CUE: [none | a scrollbar or scroll indicator the reference shows with nothing clipped, naming what scrolls and where the bar sits - "vertical scrollbar, page, right edge", "pill indicator, carousel row, bottom"]
-  ACTIVE STATES: [which element is selected + how - "Home tab: filled icon + dot indicator"]
+  ACTIVE STATES: [which element is selected + how, with the PALETTE role in parentheses after any signal that is a color - "Home tab: filled icon (accent) + dot indicator (accent)"]
   BUTTON FILLS: [per button: filled-dark|filled-color|outlined|ghost, with the PALETTE role it uses in parentheses - "Save: filled-dark (text), Cancel: outlined (secondary)"]
 -->
 <!doctype html>
@@ -34,6 +34,8 @@ Study the reference image carefully. Before writing `<!doctype html>` or any CSS
 This census is the contract for the rest of the task. Every hex value, every count, every state description written here must show up in the rendered HTML. If you render a 4th list row when the census says 3, that is a bug - go back and fix the render, not the census.
 
 Every hex in the census sits on the `PALETTE` line and nowhere else. `BUTTON FILLS` names the role whose hex that line already carries, because a second copy of a value is a second thing to keep true, and this one is unguarded: a fill written `#1A1A1A` beside a palette reading `text=#1A1512` traces back to a census line perfectly, so the reverse pass in `references/census-checklist.md` clears it and nothing else is looking. A button whose fill is on no `PALETTE` entry is a palette that missed a color, not a button detail - that line is every distinct color - so the color goes there first and the fill names its role.
+
+`ACTIVE STATES` is the other line that can carry a color, and it names its roles the same way. The signals that mark an element active are mostly colors: a dot, a tint, a filled icon, an underline. Step 4's two-signal rule names brand color against grey among its own examples, so a color can be one of the two signals that decide the state. Named in words it has no entry to point at: `accent-color dot indicator` reads as a role and is not one, and `dot indicator` leaves the color out of a description the render has to satisfy. Either way the color reaches the render from nowhere, and `references/census-checklist.md` has been asking for the role on every line but this one. A signal color matching no `PALETTE` entry is the same palette omission as the fill above, so it goes on `PALETTE` first and the state names its role.
 
 If you are working from a text description instead of an image (no reference provided), write the census anyway using your best judgment, and mark every guessed field with `[assumed]` so the user can correct it in one pass.
 

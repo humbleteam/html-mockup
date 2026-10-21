@@ -74,7 +74,7 @@ The first lines inside the delivered `.html` file always look like this, before 
   ITEMS PER SECTION: 3 list rows, 5 nav tabs
   CUT OFF AT EDGE: list row 4, bottom edge, top half visible
   SCROLL CUE: none
-  ACTIVE STATES: Home tab: filled icon + accent-color dot indicator
+  ACTIVE STATES: Home tab: filled icon (accent) + dot indicator (accent)
   BUTTON FILLS: Save: filled-dark (text), Cancel: outlined (secondary)
 -->
 <!doctype html>
