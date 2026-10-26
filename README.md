@@ -28,7 +28,7 @@ Paste a screenshot, ask for a coded version, and this Claude Code skill writes a
 
 ## What it does
 
-- Writes a machine-checkable census (palette hex values, warm/cool/neutral temperature, photo regions, item counts per section, active states, button fills) as the first lines inside the HTML file, before any markup exists.
+- Writes a machine-checkable census (palette hex values, warm/cool/neutral temperature, photo regions, item counts per section, items the frame cuts at an edge, a scroll cue shown with nothing cut, active states, button fills) as the first lines inside the HTML file, before any markup exists.
 - Treats the census as a contract - every hex value, item count, and state description it lists must show up in the rendered mockup, or the render gets fixed before delivery.
 - Replaces photo regions with real placeholder images (picsum.photos, i.pravatar.cc for faces), tinted toward the reference's color temperature with a CSS filter - never a gradient standing in for a photograph.
 - Locks color to hex values extracted from the reference, declared once as CSS custom properties on `:root`, with no raw hex anywhere else in the stylesheet.
@@ -161,7 +161,7 @@ The bar's own color is a color the reference shows, so it is on the PALETTE line
 
 ## How it works
 
-- **Census before code.** The reference gets studied and counted first - palette, temperature, photo regions, item counts, active states, button fills - as a comment block that is the literal first thing in the output file.
+- **Census before code.** The reference gets studied and counted first - palette, temperature, photo regions, item counts, items cut at an edge, scroll cue, active states, button fills - as a comment block that is the literal first thing in the output file.
 - **The census is the contract.** Every field written in it must have a matching value in the render. A mismatch is a bug in the render, not a detail to shrug off.
 - **Photos are photos.** Any photographic region gets a real `<img>` from a placeholder photo service, tinted toward the reference's warmth with a CSS filter. Gradients simulating photographs are disallowed.
 - **Color is extracted, not approximated.** Hex values come from close observation, declared once as named CSS custom properties on `:root`, used nowhere else as raw hex - gradients included, stored whole under one role name rather than split into a token per stop. The delivery check runs in both directions: every census color appears in the render, and every literal color in the render traces back to a census line or to a token marked as not from the reference.

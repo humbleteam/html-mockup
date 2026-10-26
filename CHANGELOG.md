@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0] - 2026-10-26
+
+- The README describes the census twice in prose, and both descriptions were written while it had six fields. The feature list under "What it does" read "palette hex values, warm/cool/neutral temperature, photo regions, item counts per section, active states, button fills", and the "Census before code" principle under "How it works" gave the same six in short form. The census has eight. `CUT OFF AT EDGE` arrived at 1.1.0 and `SCROLL CUE` at 1.5.0, and neither sentence picked up either one.
+- The two it left out are the two that decide the frame. Every other census line reports something inside the render; these two are the only evidence the method carries about where the reference's viewport ends, and the frame rule reads them and nothing else. `CUT OFF AT EDGE` not `none` is what builds the frame at all, and a cut at the bottom or top edge or a vertical scroll cue is what fixes its height at `844px` rather than leaving it a `min-height` floor. So a reader taking the README's summary for the contract writes a census missing the only two lines that decide whether a half-visible row stays half-visible or renders whole, which is the failure 1.2.0 and 1.4.0 were each spent on.
+- Both sentences now list all eight in census order. No field changed and no rule moved: the template in `SKILL.md` and the checklist in `references/census-checklist.md` have carried all eight since 1.5.0, so what changed is that the README's own summary of the contract now matches the contract it summarizes.
+- The opening paragraph's shorter description stays at four fields ("exact palette, photo regions, item counts, component states"). It reads as an illustration of what counting means rather than a list of the lines, and the two sentences corrected here are the ones that present themselves as the whole census.
+
 ## [1.11.0] - 2026-10-21
 
 - `references/census-checklist.md` has asked since 1.10.0 that every census line mentioning a color name a `PALETTE` role instead of carrying the color itself. `ACTIVE STATES` is the line that never learned it, and the two files that teach the census do not agree about it either: the template in `SKILL.md` read `Home tab: filled icon + dot indicator`, with no color at all, and the README's own census read `filled icon + accent-color dot indicator`, where "accent-color" reads as a role and points at no entry. So the checklist asks for something the template never taught, and a census copied from the template fails the file that checks it.
