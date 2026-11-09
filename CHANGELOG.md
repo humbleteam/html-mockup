@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0] - 2026-11-09
+
+- 1.13.0 gave `ITEMS PER SECTION` its scope in the census template, on the checklist item and in Step 5's clipped-item paragraph, and left the count lock's two headline statements as they were found: Step 5 opened with "Three rows in the reference means three rows in the output" and the README principle read "Three list rows in the reference means three in the output". Both are false for the repo's own first worked example, whose census pairs `ITEMS PER SECTION: 3 list rows` with `CUT OFF AT EDGE: list row 4, bottom edge, top half visible` and whose frame comment calls for three whole rows plus a fourth cut mid-row, which is four row elements against a count line reading three.
+- The two sentences are where a reader meets the rule, so the unscoped form is the one that gets applied. Against it, the correct render of that example looks like a violation with one row too many, and both repairs the mistake invites are things Step 5 forbids one paragraph later: deleting the half row, or completing it into a whole fourth one.
+- Both now count whole items on both sides of the claim and say so. Step 5's opening names the scope, draws the consequence the census arithmetic always had - the markup carries one more row element than the count line states - and points at the paragraph that settles the clipped case rather than restating it. The README bullet says the half row is an extra element rather than the last of the three, and names reading the count line alone as the error that produces both forbidden fixes.
+- No count moved, no render rule changed and no example changed. `references/census-checklist.md` already carried the arithmetic on its `ITEMS PER SECTION` item and on the delivery count item, so the checklist, the census template, Step 5 and the README principle now state one rule in one scope.
+
 ## [1.13.0] - 2026-11-04
 
 - `ITEMS PER SECTION` never said what it counts. The census has carried a clipped-item line since 1.1.0, and Step 5 has said since then to "count fully visible items and clipped items separately in the census" - but the separation was only ever stated in Step 5 and on the `CUT OFF AT EDGE` item in the checklist, never on the field that holds the number. The template read `[exact counts - "3 list rows", "1 transaction", "5 nav tabs"]` and the checklist asked for "an exact count, not an approximation", and neither says whether the half-visible fourth row is in it.
